@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#111827">
+  <title>Meeting Recorder Web</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <h1>Meeting Recorder Web</h1>
+        <p class="muted">Browser recorder • English + 中文 • ChatGPT-ready export</p>
+      </div>
+      <div class="status-pill" id="secureStatus">Checking browser…</div>
+    </header>
+
+    <section class="panel grid two">
+      <label>
+        <span>Project</span>
+        <input id="project" value="CCKWW">
+      </label>
+      <label>
+        <span>Meeting</span>
+        <input id="meeting" value="Progress Meeting">
+      </label>
+    </section>
+
+    <section class="panel">
+      <div class="section-title">
+        <h2>Audio</h2>
+        <div class="row gap">
+          <button id="btnMic" type="button">Connect Microphone</button>
+          <button id="btnSystem" type="button" class="secondary">Share PC / Teams Audio</button>
+        </div>
+      </div>
+
+      <div class="meter-row">
+        <div class="meter-name">ROOM MIC</div>
+        <div class="meter"><div id="micMeter" class="meter-fill"></div></div>
+        <div id="micState" class="meter-state">Not connected</div>
+      </div>
+      <canvas id="micWave" width="1200" height="130" aria-label="Room microphone waveform"></canvas>
+
+      <div class="meter-row">
+        <div class="meter-name">REMOTE / SYSTEM</div>
+        <div class="meter"><div id="sysMeter" class="meter-fill"></div></div>
+        <div id="sysState" class="meter-state">Optional</div>
+      </div>
+      <canvas id="sysWave" width="1200" height="90" aria-label="Shared system audio waveform"></canvas>
+
+      <div class="row wrap gap actions">
+        <button id="btnNoise" type="button" class="secondary">Measure Room Noise (10 sec)</button>
+        <button id="btnVoiceTest" type="button" class="secondary">Voice Test (10 sec)</button>
+        <button id="btnStart" type="button" class="primary">● Start Recording</button>
+        <button id="btnStop" type="button" disabled>■ Stop & Save</button>
+        <span id="timer" class="timer">00:00:00</span>
+      </div>
+
+      <div id="audioNotes" class="notes">
+        Recording can start immediately. Tests are optional and never block recording.
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title">
+        <h2>Recorded Meetings</h2>
+        <button id="btnRefreshMeetings" class="secondary" type="button">Refresh</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Date</th><th>Project</th><th>Meeting</th><th>Duration</th><th>Transcript</th></tr></thead>
+          <tbody id="meetingRows"></tbody>
+        </table>
+      </div>
+
+      <div class="row wrap gap actions">
+        <button id="btnLoadWhisper" type="button">Load Browser Whisper</button>
+        <button id="btnTranscribe" type="button" disabled>Create / Improve Transcript</button>
+        <button id="btnExport" type="button" disabled>Export for ChatGPT</button>
+        <label class="file-button">
+          Import AI Reviewed Transcript
+          <input id="reviewImport" type="file" accept=".json,application/json">
+        </label>
+      </div>
+      <div id="transcribeStatus" class="notes">Browser Whisper not loaded.</div>
+    </section>
+
+    <section class="panel grid two">
+      <div>
+        <div class="section-title">
+          <h2>Transcript</h2>
+          <button id="btnSaveTranscript" type="button" class="secondary">Save Edit</button>
+        </div>
+        <textarea id="transcriptEditor" rows="18" placeholder="Select a recorded meeting…"></textarea>
+      </div>
+      <div>
+        <div class="section-title">
+          <h2>Speaker Library</h2>
+          <button id="btnRefreshSpeakers" type="button" class="secondary">Refresh</button>
+        </div>
+        <div id="speakerLibrary" class="speaker-list"></div>
+        <p class="muted small">
+          Only AI-reviewed segments with <code>confirmed=true</code> update a voice profile.
+          Automatic guesses never train themselves.
+        </p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Warnings / Notes</h2>
+      <div id="warnings" class="warnings"></div>
+    </section>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
